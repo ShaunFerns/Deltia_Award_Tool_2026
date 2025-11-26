@@ -78,7 +78,7 @@ export default function ProgrammeStructurePage() {
           stage: pm.stage?.toString() || '1',
           semester: pm.semester || 'autumn',
           isCore: pm.isCore || 'core',
-          ownerEmail: '' // Not used in edit mode here
+          ownerEmail: pm.owner?.email || '' 
       });
       setIsDialogOpen(true);
   };
@@ -120,6 +120,12 @@ export default function ProgrammeStructurePage() {
               semester: moduleFormData.semester,
               isCore: moduleFormData.isCore as any
           });
+
+          // Update Owner if email provided
+          if (moduleFormData.ownerEmail) {
+              const userId = moduleFormData.ownerEmail.toLowerCase() === user.email?.toLowerCase() ? user.id : 'u_other';
+              assignModuleOwner(editingModuleId, userId);
+          }
 
           toast({ title: "Module Updated", description: "Module details saved." });
       }
@@ -345,22 +351,22 @@ export default function ProgrammeStructurePage() {
                         </div>
                     </div>
 
-                    {/* Owner Allocation - Only for Add Mode */}
-                    {dialogMode === 'add' && (
-                        <div className="pt-2 border-t mt-2">
-                            <div className="space-y-2">
-                                <Label>Module Owner (Optional)</Label>
-                                <Input 
-                                    placeholder="Enter email address to assign owner..." 
-                                    value={moduleFormData.ownerEmail}
-                                    onChange={(e) => setModuleFormData(prev => ({ ...prev, ownerEmail: e.target.value }))}
-                                />
-                                <p className="text-xs text-muted-foreground">
-                                    If provided, this user will be assigned as the module lead immediately.
-                                </p>
-                            </div>
+                    {/* Owner Allocation - Available in Add and Edit Mode */}
+                    <div className="pt-2 border-t mt-2">
+                        <div className="space-y-2">
+                            <Label>Module Owner (Optional)</Label>
+                            <Input 
+                                placeholder="Enter email address to assign owner..." 
+                                value={moduleFormData.ownerEmail}
+                                onChange={(e) => setModuleFormData(prev => ({ ...prev, ownerEmail: e.target.value }))}
+                            />
+                            <p className="text-xs text-muted-foreground">
+                                {dialogMode === 'add' 
+                                    ? "If provided, this user will be assigned as the module lead immediately."
+                                    : "Enter a new email to re-assign the module owner."}
+                            </p>
                         </div>
-                    )}
+                    </div>
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
