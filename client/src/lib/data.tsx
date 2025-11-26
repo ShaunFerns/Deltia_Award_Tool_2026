@@ -593,8 +593,14 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       localStorage.removeItem(SESSION_KEY);
   };
 
-  const seedDemoData = () => {
+  const seedDemoData = (force = false) => {
       if (!DEMO_MODE) return;
+      
+      // Prevent overwriting existing data unless forced
+      if (!force && localStorage.getItem(PROGRAMMES_KEY)) {
+          console.log("Demo data already seeded. Skipping.");
+          return;
+      }
 
       const now = new Date().toISOString();
       
