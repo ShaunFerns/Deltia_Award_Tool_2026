@@ -88,7 +88,7 @@ export default function DashboardModulePage() {
                         <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Overall Score</CardTitle></CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold text-primary">
-                                {(Object.values(evaluation.categoryScores).reduce((a: number, b: number) => a + b, 0) / 5).toFixed(1)} <span className="text-sm text-muted-foreground font-normal">/ 10</span>
+                                {((Object.values(evaluation.categoryScores) as number[]).reduce((a: number, b: number) => a + b, 0) / 5).toFixed(1)} <span className="text-sm text-muted-foreground font-normal">/ 10</span>
                             </div>
                         </CardContent>
                     </Card>

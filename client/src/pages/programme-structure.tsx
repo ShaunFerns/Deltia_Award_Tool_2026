@@ -27,7 +27,7 @@ export default function ProgrammeStructurePage() {
   } = useStore();
   
   const programmeId = params?.id;
-  const programme = programmes.find(p => p.id === programmeId);
+  const programme = programmes.find((p: any) => p.id === programmeId);
   
   const modules = programmeId ? getProgrammeModules(programmeId) : [];
 
@@ -162,7 +162,7 @@ export default function ProgrammeStructurePage() {
   };
 
   // Group modules by stage
-  const modulesByStage = modules.reduce((acc, m) => {
+  const modulesByStage = modules.reduce((acc: any, m: any) => {
       const stage = m.stage || 0;
       if (!acc[stage]) acc[stage] = [];
       acc[stage].push(m);
@@ -217,7 +217,7 @@ export default function ProgrammeStructurePage() {
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        stageModules.map(pm => (
+                                        stageModules.map((pm: any) => (
                                             <TableRow key={pm.id}>
                                                 <TableCell className="capitalize">{pm.semester?.replace('_', ' ')}</TableCell>
                                                 <TableCell>
