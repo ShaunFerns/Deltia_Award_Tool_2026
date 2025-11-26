@@ -128,23 +128,34 @@ export default function MyModulesPage() {
                           )}
                         </TableCell>
                         <TableCell className="text-right">
-                          <Link href={isStarted ? (mod.programmeId ? `/dashboard/programme/${mod.programmeId}/module/${mod.id}` : `/dashboard/module/${mod.id}`) : `/evaluate/${mod.id}`}>
-                            <Button 
-                              size="sm" 
-                              variant={isStarted ? "secondary" : "default"}
-                              className="gap-2 min-w-[140px]"
-                            >
-                              {isStarted ? (
-                                <>
-                                  <LayoutDashboard className="h-4 w-4" /> View Dashboard
-                                </>
-                              ) : (
-                                <>
-                                  <PlayCircle className="h-4 w-4" /> Start Evaluation
-                                </>
-                              )}
-                            </Button>
-                          </Link>
+                          <div className="flex items-center justify-end gap-2">
+                            {isStarted && (
+                                <Link href={`/evaluate/${mod.id}`}>
+                                    <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+                                        <span className="sr-only">Edit</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-pencil"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+                                    </Button>
+                                </Link>
+                            )}
+                            
+                            <Link href={isStarted ? (mod.programmeId ? `/dashboard/programme/${mod.programmeId}/module/${mod.id}` : `/dashboard/module/${mod.id}`) : `/evaluate/${mod.id}`}>
+                                <Button 
+                                size="sm" 
+                                variant={isStarted ? "secondary" : "default"}
+                                className="gap-2 min-w-[140px]"
+                                >
+                                {isStarted ? (
+                                    <>
+                                    <LayoutDashboard className="h-4 w-4" /> View Dashboard
+                                    </>
+                                ) : (
+                                    <>
+                                    <PlayCircle className="h-4 w-4" /> Start Evaluation
+                                    </>
+                                )}
+                                </Button>
+                            </Link>
+                          </div>
                         </TableCell>
                       </TableRow>
                     );
