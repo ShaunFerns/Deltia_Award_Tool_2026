@@ -289,6 +289,7 @@ export const DEMO_MODE = true;
 export const TEST_USERS = [
     { username: "demo_team1", password: "delta123", role: "programme_chair", name: "Dr. Alex Rivera", id: "u1", email: "alex.rivera@uni.ac.uk" },
     { username: "demo_team2", password: "delta123", role: "module_lead", name: "Prof. Sarah Chen", id: "u2", email: "sarah.chen@uni.ac.uk" },
+    { username: "demo_empty", password: "delta123", role: "programme_chair", name: "Dr. Empty User", id: "u4", email: "empty.user@uni.ac.uk" },
 ];
 
 const MOCK_USER: User = {
