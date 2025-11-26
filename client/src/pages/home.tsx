@@ -63,7 +63,7 @@ export default function HomePage() {
                             </CardContent>
                         </Card>
                     ) : (
-                        myModules.slice(0, 3).map((module: Module) => {
+                        myModules.map((module: Module) => {
                             const evaluation = getEvaluation(module.id);
                             const isCompleted = !!evaluation;
                             

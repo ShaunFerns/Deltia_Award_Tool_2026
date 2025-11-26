@@ -753,10 +753,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
               cohortCharacteristics: ['mixed_level'],
               assessments: [
                   // Varied assessment schedule for clustering/timing demo
-                  { id: 'a1', name: 'Project', type: 'project', weight: isStrong ? 50 : 100, dueWeek: 12, shared: 'no', timingBand: 'late' },
-                  ...(isStrong ? [{ id: 'a2', name: 'Mid-term Review', type: 'presentation', weight: 30, dueWeek: 6, shared: 'no', timingBand: 'mid' as const }] : []),
-                  ...(isStrong ? [{ id: 'a3', name: 'Reflection', type: 'essay', weight: 20, dueWeek: 9, shared: 'no', timingBand: 'mid' as const }] : []),
-                  ...(isDigitalInclusion ? [{ id: 'a4', name: 'Early Feedback Task', type: 'formative', weight: 0, dueWeek: 3, shared: 'no', timingBand: 'early' as const }] : [])
+                  { id: 'a1', name: 'Project', type: 'project', weight: isStrong ? 50 : 100, dueWeek: 12, shared: 'no' as const, timingBand: 'late' as const },
+                  ...(isStrong ? [{ id: 'a2', name: 'Mid-term Review', type: 'presentation', weight: 30, dueWeek: 6, shared: 'no' as const, timingBand: 'mid' as const }] : []),
+                  ...(isStrong ? [{ id: 'a3', name: 'Reflection', type: 'essay', weight: 20, dueWeek: 9, shared: 'no' as const, timingBand: 'mid' as const }] : []),
+                  ...(isDigitalInclusion ? [{ id: 'a4', name: 'Early Feedback Task', type: 'formative', weight: 0, dueWeek: 3, shared: 'no' as const, timingBand: 'early' as const }] : [])
               ],
               udlIndicators: isDigitalInclusion ? ['multiple_means_expression', 'flexible_deadlines'] : [],
               digitalPractice: isDigitalInclusion ? ['vle_template', 'accessibility_checked'] : ['vle_template'],
@@ -791,7 +791,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
                   ? "Students consistently praise the authentic nature of the tasks and clarity of feedback." 
                   : "Students find the workload heavy at times, but appreciate the structure.",
               
-              curriculumConnections: m.credits > 10 
+              curriculumConnections: (m.credits || 5) > 10 
                   ? "Explicitly connects with research methods module in previous semester." 
                   : "Builds on foundational concepts from Stage 1.",
               

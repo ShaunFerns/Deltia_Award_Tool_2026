@@ -13,12 +13,12 @@ export default function MyModulesPage() {
 
   // Calculate stats
   const totalModules = modules.length;
-  const evaluations = modules.map(m => getEvaluation(m.id));
-  const completed = evaluations.filter(e => e && e.completedAt).length; // Assuming existence means started/completed for now
+  const evaluations = modules.map((m: any) => getEvaluation(m.id));
+  const completed = evaluations.filter((e: any) => e && e.completedAt).length; // Assuming existence means started/completed for now
   // In a real app, we'd check a specific status field. For now, existence = in progress/done.
   // Let's refine: The mock data doesn't strictly have 'status', but we can infer.
   // Let's just count 'Evaluations Started'
-  const started = evaluations.filter(e => !!e).length;
+  const started = evaluations.filter((e: any) => !!e).length;
   const notStarted = totalModules - started;
 
   return (
@@ -99,7 +99,7 @@ export default function MyModulesPage() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  modules.map((mod) => {
+                  modules.map((mod: any) => {
                     const evaluation = getEvaluation(mod.id);
                     const isStarted = !!evaluation;
                     

@@ -16,15 +16,15 @@ export default function DashboardModulePage() {
 
   const { user, programmes, evaluations, getProgrammeModules } = useStore();
   
-  const programme = programmeId ? programmes.find(p => p.id === programmeId) : undefined;
+  const programme = programmeId ? programmes.find((p: any) => p.id === programmeId) : undefined;
   
   // If we have a programme, try to find the module within it
   // If not, we might just be looking for the module itself (standalone or just not in programme context)
   const progModule = programmeId 
-    ? getProgrammeModules(programmeId).find(pm => pm.moduleId === moduleId)
+    ? getProgrammeModules(programmeId).find((pm: any) => pm.moduleId === moduleId)
     : { module: { name: 'Module Dashboard', code: '' } }; // Fallback if no programme context
 
-  const evaluation = evaluations.find(e => e.moduleId === moduleId); // Simplified lookup
+  const evaluation = evaluations.find((e: ModuleEvaluation) => e.moduleId === moduleId); // Simplified lookup
   
   // If we strictly need programme context but don't have it, we might want to look it up from the module?
   // For now, let's handle the "No Programme" case gracefully
@@ -47,7 +47,7 @@ export default function DashboardModulePage() {
 
   // 2. Assessment Data
   const assessments = evaluation?.metadata?.assessments || [];
-  const assessmentData = assessments.map(a => ({
+  const assessmentData = assessments.map((a: any) => ({
       name: a.type,
       value: a.weight
   }));
@@ -88,7 +88,7 @@ export default function DashboardModulePage() {
                         <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Overall Score</CardTitle></CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold text-primary">
-                                {(Object.values(evaluation.categoryScores).reduce((a, b) => a + b, 0) / 5).toFixed(1)} <span className="text-sm text-muted-foreground font-normal">/ 10</span>
+                                {(Object.values(evaluation.categoryScores).reduce((a: number, b: number) => a + b, 0) / 5).toFixed(1)} <span className="text-sm text-muted-foreground font-normal">/ 10</span>
                             </div>
                         </CardContent>
                     </Card>
@@ -160,9 +160,9 @@ export default function DashboardModulePage() {
                                             outerRadius={100}
                                             paddingAngle={5}
                                             dataKey="value"
-                                            label={({name, percent}) => `${name} ${(percent * 100).toFixed(0)}%`}
+                                            label={({name, percent}: {name: string, percent: number}) => `${name} ${(percent * 100).toFixed(0)}%`}
                                         >
-                                            {assessmentData.map((entry, index) => (
+                                            {assessmentData.map((entry: any, index: number) => (
                                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                             ))}
                                         </Pie>
@@ -247,7 +247,7 @@ export default function DashboardModulePage() {
                         </CardHeader>
                         <CardContent>
                              <div className="space-y-3">
-                                {evaluation.metadata?.assessments.map((a, i) => (
+                                {evaluation.metadata?.assessments.map((a: any, i: number) => (
                                     <div key={i} className="flex items-center justify-between p-3 bg-muted/20 rounded border hover:bg-muted/30 transition-colors">
                                         <div>
                                             <div className="font-bold text-sm">{a.name}</div>
@@ -272,7 +272,7 @@ export default function DashboardModulePage() {
                                 <div>
                                     <div className="text-sm font-semibold mb-2 text-muted-foreground uppercase tracking-wider text-xs">UDL Features</div>
                                     <div className="flex flex-wrap gap-2">
-                                        {evaluation.metadata.udlIndicators.map((i, idx) => <Badge key={idx} variant="secondary" className="capitalize">{i.replace(/_/g, ' ')}</Badge>)}
+                                        {evaluation.metadata.udlIndicators.map((i: string, idx: number) => <Badge key={idx} variant="secondary" className="capitalize">{i.replace(/_/g, ' ')}</Badge>)}
                                     </div>
                                 </div>
                             )}
@@ -280,7 +280,7 @@ export default function DashboardModulePage() {
                                 <div>
                                     <div className="text-sm font-semibold mb-2 text-muted-foreground uppercase tracking-wider text-xs">Teaching Approach</div>
                                     <div className="flex flex-wrap gap-2">
-                                        {evaluation.metadata.teachingApproaches.map((i, idx) => <Badge key={idx} variant="outline" className="capitalize">{i.replace(/_/g, ' ')}</Badge>)}
+                                        {evaluation.metadata.teachingApproaches.map((i: string, idx: number) => <Badge key={idx} variant="outline" className="capitalize">{i.replace(/_/g, ' ')}</Badge>)}
                                     </div>
                                 </div>
                             )}
@@ -288,7 +288,7 @@ export default function DashboardModulePage() {
                                 <div>
                                     <div className="text-sm font-semibold mb-2 text-muted-foreground uppercase tracking-wider text-xs">Digital Practice</div>
                                     <div className="flex flex-wrap gap-2">
-                                        {evaluation.metadata.digitalPractice.map((i, idx) => <Badge key={idx} variant="outline" className="border-blue-200 bg-blue-50 text-blue-800 capitalize">{i.replace(/_/g, ' ')}</Badge>)}
+                                        {evaluation.metadata.digitalPractice.map((i: string, idx: number) => <Badge key={idx} variant="outline" className="border-blue-200 bg-blue-50 text-blue-800 capitalize">{i.replace(/_/g, ' ')}</Badge>)}
                                     </div>
                                 </div>
                             )}

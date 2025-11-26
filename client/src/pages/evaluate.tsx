@@ -128,7 +128,7 @@ export default function EvaluatePage() {
   const { user, modules, getEvaluation, saveEvaluation } = useStore();
   const moduleId = params?.id;
   
-  const module = modules.find(m => m.id === moduleId);
+  const module = modules.find((m: any) => m.id === moduleId);
   
   // State for Academic Year
   const [academicYear, setAcademicYear] = useState("2024–25");
