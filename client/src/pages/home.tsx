@@ -101,28 +101,13 @@ export default function HomePage() {
                                   </div>
                                 </CardContent>
                           
-                                <CardFooter className="pt-3 border-t border-border/40 bg-muted/20 grid grid-cols-2 gap-2">
-                                  {isCompleted ? (
-                                    <>
-                                      <Link href={`/evaluate/${module.id}`}>
-                                        <Button size="sm" variant="outline" className="w-full group-hover:border-primary/50 transition-all">
-                                          Edit
-                                        </Button>
-                                      </Link>
-                                      <Link href={module.programmeId ? `/dashboard/programme/${module.programmeId}/module/${module.id}` : `/dashboard/module/${module.id}`}>
-                                        <Button size="sm" variant="outline" className="w-full group-hover:border-primary/50 transition-all">
-                                          Dashboard
-                                        </Button>
-                                      </Link>
-                                    </>
-                                  ) : (
-                                    <Link href={`/evaluate/${module.id}`} className="col-span-2">
-                                      <Button className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-all" variant="default">
-                                        Evaluate Module
-                                        <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                                      </Button>
-                                    </Link>
-                                  )}
+                                <CardFooter className="pt-3 border-t border-border/40 bg-muted/20">
+                                  <Link href={`/evaluate/${module.id}`}>
+                                    <Button className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-all" variant={isCompleted ? "outline" : "default"}>
+                                      {isCompleted ? 'Edit Evaluation' : 'Evaluate Module'}
+                                      <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                                    </Button>
+                                  </Link>
                                 </CardFooter>
                               </Card>
                             );
