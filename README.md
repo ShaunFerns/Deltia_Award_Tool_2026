@@ -53,5 +53,4 @@ Use these credentials to test the different roles:
 ## ⚠️ Prototype Notes
 
 *   **Frontend Only**: All data is stored in your browser's `localStorage`. Clearing cache will reset the demo.
-*   **Irish English**: Spelling follows Irish/UK conventions (e.g., "Programme", "Visualisation", "Operationalise").
 *   **Demo Data**: The system auto-seeds realistic demo content if storage is empty.
