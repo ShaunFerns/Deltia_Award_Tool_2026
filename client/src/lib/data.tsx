@@ -462,20 +462,20 @@ export interface SmartGoal {
 
 // --- Store Logic (LocalStorage wrapper) ---
 
-const STORAGE_KEY = 'delta_evaluations_v4'; // Active evaluations
-const HISTORY_STORAGE_KEY = 'delta_evaluations_history_v1'; // History
-const PROGRAMMES_KEY = 'delta_programmes_v1';
-const MODULES_KEY = 'delta_modules_v1';
-const PROGRAMME_MODULES_KEY = 'delta_programme_modules_v1';
-const PROGRAMME_CHAIRS_KEY = 'delta_programme_chairs_v1';
-const MODULE_OWNERS_KEY = 'delta_module_owners_v1';
-const PROGRAMME_PROFILES_KEY = 'delta_programme_profiles_v1';
-const PROGRAMME_TEAM_MEMBERS_KEY = 'delta_programme_team_members_v1';
-const PROGRAMME_TAKING_STOCK_KEY = 'delta_programme_taking_stock_v1';
-const PROGRAMME_PRIORITIES_KEY = 'delta_programme_priorities_v1';
-const PROGRAMME_THEMES_KEY = 'delta_programme_themes_v1';
-const PROGRAMME_GOALS_KEY = 'delta_programme_goals_v1';
-const SESSION_KEY = 'delta_session_v1';
+const STORAGE_KEY = 'delta_evaluations_v5'; // Active evaluations
+const HISTORY_STORAGE_KEY = 'delta_evaluations_history_v2'; // History
+const PROGRAMMES_KEY = 'delta_programmes_v2';
+const MODULES_KEY = 'delta_modules_v2';
+const PROGRAMME_MODULES_KEY = 'delta_programme_modules_v2';
+const PROGRAMME_CHAIRS_KEY = 'delta_programme_chairs_v2';
+const MODULE_OWNERS_KEY = 'delta_module_owners_v2';
+const PROGRAMME_PROFILES_KEY = 'delta_programme_profiles_v2';
+const PROGRAMME_TEAM_MEMBERS_KEY = 'delta_programme_team_members_v2';
+const PROGRAMME_TAKING_STOCK_KEY = 'delta_programme_taking_stock_v2';
+const PROGRAMME_PRIORITIES_KEY = 'delta_programme_priorities_v2';
+const PROGRAMME_THEMES_KEY = 'delta_programme_themes_v2';
+const PROGRAMME_GOALS_KEY = 'delta_programme_goals_v2';
+const SESSION_KEY = 'delta_session_v2';
 
 const StoreContext = createContext<any>(null);
 
@@ -710,6 +710,9 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       const evals: ModuleEvaluation[] = [];
       
       allDemoModules.forEach((m, i) => {
+          // Skip evaluation for some modules to show "Not Started" state (indices 3, 7, 11)
+          if (i % 4 === 3) return;
+
           // Generate mock scores
           // i % 3 == 0 -> High (Leading)
           // i % 3 == 1 -> Mid (Consolidating)
