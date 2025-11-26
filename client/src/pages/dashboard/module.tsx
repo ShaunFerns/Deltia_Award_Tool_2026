@@ -8,16 +8,28 @@ import { CheckCircle2, FileText, PieChart as PieIcon, ArrowLeft, AlertTriangle, 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend, PieChart, Pie, Cell } from 'recharts';
 
 export default function DashboardModulePage() {
-  const [, params] = useRoute("/dashboard/programme/:pid/module/:mid");
-  const programmeId = params?.pid;
-  const moduleId = params?.mid;
+  const [matchProg, paramsProg] = useRoute("/dashboard/programme/:pid/module/:mid");
+  const [matchMod, paramsMod] = useRoute("/dashboard/module/:mid");
+  
+  const moduleId = matchProg ? paramsProg?.mid : paramsMod?.mid;
+  const programmeId = matchProg ? paramsProg?.pid : undefined;
+
   const { user, programmes, evaluations, getProgrammeModules } = useStore();
   
-  const programme = programmes.find(p => p.id === programmeId);
-  const progModule = getProgrammeModules(programmeId || '').find(pm => pm.moduleId === moduleId);
+  const programme = programmeId ? programmes.find(p => p.id === programmeId) : undefined;
+  
+  // If we have a programme, try to find the module within it
+  // If not, we might just be looking for the module itself (standalone or just not in programme context)
+  const progModule = programmeId 
+    ? getProgrammeModules(programmeId).find(pm => pm.moduleId === moduleId)
+    : { module: { name: 'Module Dashboard', code: '' } }; // Fallback if no programme context
+
   const evaluation = evaluations.find(e => e.moduleId === moduleId); // Simplified lookup
   
-  if (!programme || !progModule) return <div>Module not found</div>;
+  // If we strictly need programme context but don't have it, we might want to look it up from the module?
+  // For now, let's handle the "No Programme" case gracefully
+  
+  if (!moduleId) return <div>Invalid Module ID</div>;
 
   // --- Data Prep ---
   
@@ -42,15 +54,23 @@ export default function DashboardModulePage() {
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
   return (
-    <DashboardLayout user={user} title={progModule.module?.name || 'Module'} subtitle={`${progModule.module?.code} • ${programme.name}`}>
+    <DashboardLayout user={user} title={evaluation?.metadata?.moduleHeadline || 'Module Dashboard'} subtitle={programme ? `${programme.name}` : 'Module Evaluation'}>
         
         {/* Back Navigation */}
         <div className="mb-6">
-            <Link href={`/dashboard/programme/${programmeId}`}>
-                <Button variant="ghost" className="gap-2 pl-0 hover:pl-2 transition-all">
-                    <ArrowLeft className="h-4 w-4" /> Back to {programme.name} Dashboard
-                </Button>
-            </Link>
+            {programmeId ? (
+                <Link href={`/dashboard/programme/${programmeId}`}>
+                    <Button variant="ghost" className="gap-2 pl-0 hover:pl-2 transition-all">
+                        <ArrowLeft className="h-4 w-4" /> Back to {programme?.name} Dashboard
+                    </Button>
+                </Link>
+            ) : (
+                <Link href="/my-modules">
+                    <Button variant="ghost" className="gap-2 pl-0 hover:pl-2 transition-all">
+                        <ArrowLeft className="h-4 w-4" /> Back to My Modules
+                    </Button>
+                </Link>
+            )}
         </div>
 
         {!evaluation ? (

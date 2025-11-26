@@ -68,6 +68,9 @@ function Router() {
       <Route path="/dashboard/programme/:pid/module/:mid">
         {(params) => <ProtectedRoute component={DashboardModulePage} {...params} />}
       </Route>
+      <Route path="/dashboard/module/:mid">
+        {(params) => <ProtectedRoute component={DashboardModulePage} {...params} />}
+      </Route>
       
       {/* Programme Chair Routes */}
       <Route path="/my-programmes">

@@ -102,7 +102,7 @@ export default function HomePage() {
                                 </CardContent>
                           
                                 <CardFooter className="pt-3 border-t border-border/40 bg-muted/20">
-                                  <Link href={isCompleted && module.programmeId ? `/dashboard/programme/${module.programmeId}/module/${module.id}` : `/evaluate/${module.id}`}>
+                                  <Link href={isCompleted ? (module.programmeId ? `/dashboard/programme/${module.programmeId}/module/${module.id}` : `/dashboard/module/${module.id}`) : `/evaluate/${module.id}`}>
                                     <Button className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-all" variant={isCompleted ? "outline" : "default"}>
                                       {isCompleted ? 'View Dashboard' : 'Evaluate Module'}
                                       <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />

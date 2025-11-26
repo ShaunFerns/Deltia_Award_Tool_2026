@@ -128,7 +128,7 @@ export default function MyModulesPage() {
                           )}
                         </TableCell>
                         <TableCell className="text-right">
-                          <Link href={isStarted && mod.programmeId ? `/dashboard/programme/${mod.programmeId}/module/${mod.id}` : `/evaluate/${mod.id}`}>
+                          <Link href={isStarted ? (mod.programmeId ? `/dashboard/programme/${mod.programmeId}/module/${mod.id}` : `/dashboard/module/${mod.id}`) : `/evaluate/${mod.id}`}>
                             <Button 
                               size="sm" 
                               variant={isStarted ? "secondary" : "default"}
