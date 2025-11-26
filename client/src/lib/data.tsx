@@ -1047,8 +1047,25 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         .map(pm => {
             const module = modules.find(m => m.id === pm.moduleId);
             const owner = moduleOwners.find(mo => mo.moduleId === pm.moduleId);
-            // Mock user lookup for owner - in real app this would join Users table
-            const ownerUser = owner ? (owner.userId === MOCK_USER.id ? MOCK_USER : { id: owner.userId, name: 'Other User' }) : null;
+            
+            // Improved User Lookup
+            let ownerUser = null;
+            if (owner) {
+                // 1. Try current session user
+                if (user && owner.userId === user.id) {
+                    ownerUser = user;
+                } 
+                // 2. Try known test users
+                else {
+                    const foundTestUser = TEST_USERS.find(u => u.id === owner.userId);
+                    if (foundTestUser) {
+                        ownerUser = { id: foundTestUser.id, name: foundTestUser.name, email: foundTestUser.email, role: foundTestUser.role };
+                    } else {
+                        // 3. Fallback
+                        ownerUser = { id: owner.userId, name: 'Other User' };
+                    }
+                }
+            }
             
             return {
                 ...pm,

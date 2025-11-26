@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useRoute, Link } from "wouter";
 import { ProgrammeLayout } from "@/components/programme-layout";
-import { useStore, ProgrammeModule } from "@/lib/data";
+import { useStore, ProgrammeModule, TEST_USERS } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -101,7 +101,12 @@ export default function ProgrammeStructurePage() {
 
           // If owner email provided, assign it
           if (moduleFormData.ownerEmail && result.moduleId) {
-              const userId = moduleFormData.ownerEmail.toLowerCase() === user.email?.toLowerCase() ? user.id : 'u_other';
+              const normalizedEmail = moduleFormData.ownerEmail.toLowerCase();
+              const knownUser = TEST_USERS.find(u => u.email?.toLowerCase() === normalizedEmail);
+              
+              const userId = knownUser ? knownUser.id : (
+                  normalizedEmail === user.email?.toLowerCase() ? user.id : 'u_other'
+              );
               assignModuleOwner(result.moduleId, userId);
           }
 
@@ -123,7 +128,14 @@ export default function ProgrammeStructurePage() {
 
           // Update Owner if email provided
           if (moduleFormData.ownerEmail) {
-              const userId = moduleFormData.ownerEmail.toLowerCase() === user.email?.toLowerCase() ? user.id : 'u_other';
+              const normalizedEmail = moduleFormData.ownerEmail.toLowerCase();
+              // Check against known test users first
+              const knownUser = TEST_USERS.find(u => u.email?.toLowerCase() === normalizedEmail);
+              
+              const userId = knownUser ? knownUser.id : (
+                  normalizedEmail === user.email?.toLowerCase() ? user.id : 'u_other'
+              );
+              
               assignModuleOwner(editingModuleId, userId);
           }
 
@@ -136,7 +148,12 @@ export default function ProgrammeStructurePage() {
   const handleAssignOwner = () => {
       if (!ownerModuleId || !ownerEmail) return;
       
-      const userId = ownerEmail.toLowerCase() === user.email?.toLowerCase() ? user.id : 'u_other';
+      const normalizedEmail = ownerEmail.toLowerCase();
+      const knownUser = TEST_USERS.find(u => u.email?.toLowerCase() === normalizedEmail);
+      
+      const userId = knownUser ? knownUser.id : (
+          normalizedEmail === user.email?.toLowerCase() ? user.id : 'u_other'
+      );
       
       assignModuleOwner(ownerModuleId, userId);
       setOwnerModuleId(null);
