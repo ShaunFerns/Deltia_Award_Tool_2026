@@ -179,7 +179,6 @@ export default function LoginPage() {
                                 onClick={() => fillDemo("admin", "admin")}
                              >
                                 <span>Admin Access</span>
-                                <span className="font-mono opacity-50">admin / admin</span>
                              </div>
                           </div>
                       </div>
