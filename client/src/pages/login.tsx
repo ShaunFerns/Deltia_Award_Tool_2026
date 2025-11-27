@@ -171,16 +171,6 @@ export default function LoginPage() {
                                   </div>
                               ))}
                           </div>
-                          
-                          {/* Admin Login Helper */}
-                          <div className="pt-2 border-t w-full">
-                             <div 
-                                className="text-xs text-slate-400 hover:text-slate-700 cursor-pointer flex justify-between items-center"
-                                onClick={() => fillDemo("admin", "admin")}
-                             >
-                                <span>Admin Access</span>
-                             </div>
-                          </div>
                       </div>
                   </CardFooter>
               )}
