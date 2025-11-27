@@ -4,12 +4,12 @@ import { useStore, User } from "@/lib/data";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Users, Shield, UserCog, Activity } from "lucide-react";
+import { Users, Shield, UserCog, Activity, LogOut } from "lucide-react";
 import { Link } from "wouter";
 
 export default function AdminDashboard() {
   const [, setLocation] = useLocation();
-  const { user, users } = useStore();
+  const { user, users, logout } = useStore();
 
   // Redirect if not admin
   useEffect(() => {
@@ -34,11 +34,16 @@ export default function AdminDashboard() {
           <h1 className="text-3xl font-bold font-serif text-slate-900">Admin Dashboard</h1>
           <p className="text-muted-foreground mt-1">Manage users and system access.</p>
         </div>
-        <Link href="/admin/users">
-            <Button>
-                <UserCog className="mr-2 h-4 w-4" /> Manage Users
+        <div className="flex gap-2">
+            <Link href="/admin/users">
+                <Button>
+                    <UserCog className="mr-2 h-4 w-4" /> Manage Users
+                </Button>
+            </Link>
+            <Button variant="outline" onClick={() => logout()}>
+                <LogOut className="mr-2 h-4 w-4" /> Sign Out
             </Button>
-        </Link>
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
