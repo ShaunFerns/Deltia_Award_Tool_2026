@@ -27,6 +27,11 @@ import MyModulesPage from "@/pages/my-modules";
 import AboutPage from "@/pages/about";
 import InstructionsPage from "@/pages/instructions";
 
+// Admin Pages
+import AdminDashboard from "@/pages/admin/dashboard";
+import AdminUsersListPage from "@/pages/admin/users-list";
+import AdminUserFormPage from "@/pages/admin/user-form";
+
 function ProtectedRoute({ component: Component, ...props }: any) {
   const { user } = useStore();
   const [, setLocation] = useLocation();
@@ -72,6 +77,20 @@ function Router() {
         {(params) => <ProtectedRoute component={DashboardModulePage} {...params} />}
       </Route>
       
+      {/* Admin Routes */}
+      <Route path="/admin">
+        {(params) => <ProtectedRoute component={AdminDashboard} {...params} />}
+      </Route>
+      <Route path="/admin/users">
+        {(params) => <ProtectedRoute component={AdminUsersListPage} {...params} />}
+      </Route>
+      <Route path="/admin/users/create">
+        {(params) => <ProtectedRoute component={AdminUserFormPage} {...params} />}
+      </Route>
+      <Route path="/admin/users/:id/edit">
+        {(params) => <ProtectedRoute component={AdminUserFormPage} {...params} />}
+      </Route>
+
       {/* Programme Chair Routes */}
       <Route path="/my-programmes">
         {(params) => <ProtectedRoute component={MyProgrammesPage} {...params} />}

@@ -1,0 +1,316 @@
+tep 0 – Inspect the current project
+
+List files and identify:
+
+Main Flask app (main.py or app.py)
+
+templates/ and static/ directories
+
+Existing auth and user models (if any)
+
+Existing role and permission logic:
+
+Programme chair creating programmes / modules
+
+Module owners editing only their modules
+
+Do not change:
+
+Any route that allows programme chairs to create/manage programmes
+
+Any route that allows module owners to edit only their modules
+
+Your changes must only add an Admin layer for user/role management.
+
+Step 1 – Ensure/extend the User model
+
+If a User model already exists, extend it. If it does not, create one consistent with the rest of the app.
+
+The User model must at minimum have:
+
+id (primary key, int)
+
+email (string, unique, indexed)
+
+name (string)
+
+password_hash (string)
+
+role (string; e.g. "admin", "programme_chair", "module_owner", "viewer")
+
+is_active (boolean, default True)
+
+Actions:
+
+Add/confirm the role and is_active fields.
+
+Confirm there is a method or utility to set/check password using secure hashes (for example, generate_password_hash and check_password_hash from werkzeug.security).
+
+Do not add programme/module ownership logic here; that should already exist elsewhere.
+
+Return the full file containing the User model (or full main.py if models live there).
+
+Step 2 – Confirm / add authentication & role checking
+
+If login is already implemented, integrate with it. If not, create basic login/logout.
+
+Requirements:
+
+Use a session-based auth system (Flask-Login or equivalent).
+
+Ensure the following exist:
+
+login route (GET/POST) with email and password
+
+logout route
+
+current_user context
+
+@login_required decorator
+
+Add a role_required decorator if not already present:
+
+Signature example: @role_required('admin')
+
+Checks:
+
+user is authenticated
+
+current_user.role is in allowed roles
+
+If not allowed:
+
+return 403 or redirect to a “Not authorised” page
+
+Do not modify the existing permission logic for programme chairs or module owners.
+
+Return the full main app file including these decorators and routes.
+
+Step 3 – Implement the minimal Admin routes
+
+Create an Admin section whose purpose is only user & role management.
+
+All admin routes must be protected by:
+
+@login_required
+
+@role_required('admin')
+
+3.1 Admin Dashboard
+
+Route:
+
+GET /admin
+
+Behaviour:
+
+Shows a simple dashboard with:
+
+Number of users (total)
+
+A count of users by role (admin, programme chair, module owner, viewer)
+
+Links to:
+
+“Manage Users” (/admin/users)
+
+Does not show any programme or module controls.
+
+Template:
+
+templates/admin/dashboard.html
+
+Title: “Admin Dashboard”
+
+Simple cards or table with user stats and link to “Manage Users”
+
+3.2 User Management
+
+Routes to implement:
+
+GET /admin/users
+
+List all users in a table:
+
+Name
+
+Email
+
+Role
+
+Active status
+
+Actions per user:
+
+“Edit” (role and name)
+
+“Reset Password”
+
+“Activate/Deactivate”
+
+Button: “Create New User”
+
+GET /admin/users/create
+
+Form fields:
+
+name
+
+email
+
+role (dropdown: "admin", "programme_chair", "module_owner", "viewer")
+
+password
+
+confirm_password
+
+POST /admin/users/create
+
+Validate:
+
+Email not already used
+
+Passwords match
+
+Hash the password and create a new User
+
+Set is_active=True by default
+
+Redirect to /admin/users with a success message
+
+GET /admin/users/<int:user_id>/edit
+
+Show form with:
+
+name
+
+email (read-only or editable, consistent with your policy)
+
+role
+
+is_active (checkbox)
+
+Do not show password fields here.
+
+POST /admin/users/<int:user_id>/edit
+
+Update name, role, and is_active
+
+Redirect back to /admin/users
+
+POST /admin/users/<int:user_id>/reset-password
+
+Generate a new random password (at least 12 characters, mixed letters and digits)
+
+Hash and store it as password_hash
+
+Show the new password on a confirmation page or via a flash message, so the admin can manually communicate it to the user.
+
+Do not integrate email at this stage.
+
+POST /admin/users/<int:user_id>/toggle-active
+
+Flip is_active between True and False
+
+Redirect to /admin/users
+
+Templates to create:
+
+templates/admin/users_list.html
+
+Table of users
+
+Buttons for each action
+
+templates/admin/user_form.html
+
+Used for both create and edit (pass a mode flag or reuse carefully)
+
+Design notes:
+
+Keep layout simple and consistent.
+
+Provide clear labels and buttons: “Save”, “Cancel”, “Reset Password”, “Activate/Deactivate”.
+
+Step 4 – Integrate Admin navigation into the main layout
+
+Locate the base template (for example templates/base.html).
+
+In the navigation area, add a conditional “Admin” link:
+
+{% if current_user.is_authenticated and current_user.role == 'admin' %}
+  <a href="{{ url_for('admin_dashboard') }}">Admin</a>
+{% endif %}
+
+
+Make sure the “Login”/“Logout” links are already present or add them if needed.
+
+Do not expose Admin links to non-admin roles.
+
+Return the full updated base.html.
+
+Step 5 – Keep programme and module control with Programme Chairs
+
+Double-check that:
+
+No new admin route allows creating, editing, or deleting:
+
+Programmes
+
+Modules
+
+Programme chairs still:
+
+Create new programmes
+
+Add modules
+
+Manage module-level configuration
+
+Module owners:
+
+Can only view and edit modules they have been allocated.
+
+If you find any accidental overlap, remove admin access to programme or module manipulation.
+
+Step 6 – Styling and clarity
+
+If a global stylesheet exists (e.g. static/css/style.css), ensure:
+
+Admin pages use the same base styling.
+
+Tables, forms, and buttons are legible and consistent.
+
+On each Admin page, include:
+
+A clear H1 heading, for example:
+
+“Admin Dashboard”
+
+“Manage Users”
+
+A “Back to Admin Dashboard” link.
+
+Return the full CSS file if you adjust it.
+
+Step 7 – Final testing
+
+Run the Flask app.
+
+Ensure you can:
+
+Log in as an admin.
+
+Access /admin and /admin/users.
+
+Create a new user and assign roles.
+
+Edit a user’s role and activation status.
+
+Reset a user’s password and log in with the new password.
+
+Log in as:
+
+Programme chair: confirm they do not see an Admin link but can manage programmes and modules as before.
+
+Module owner: confirm they can only edit allocated modules and never see Admin functionality.

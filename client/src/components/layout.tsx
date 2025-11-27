@@ -40,6 +40,11 @@ export function Layout({ children, user }: LayoutProps) {
                 <Link href="/dashboard" className={cn("hover:text-primary transition-colors", location.startsWith('/dashboard') ? "text-primary font-bold" : "")}>
                       My Dashboards
                 </Link>
+                {user.role === 'admin' && (
+                    <Link href="/admin" className={cn("hover:text-primary transition-colors", location.startsWith('/admin') ? "text-primary font-bold" : "")}>
+                        Admin
+                    </Link>
+                )}
              </div>
              <div className="h-4 w-px bg-border hidden md:block"></div>
              <div className="flex items-center gap-2">

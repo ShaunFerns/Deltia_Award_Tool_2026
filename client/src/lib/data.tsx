@@ -7,6 +7,8 @@ export interface User {
   name: string;
   email?: string; // Added email for user identification
   role?: string; // Added role for UI permission hints
+  isActive?: boolean; // New: Admin active status
+  password?: string; // New: Simulated password storage for mockup
 }
 
 export interface Programme {
@@ -287,16 +289,18 @@ export interface ModuleEvaluationHistory {
 export const DEMO_MODE = true;
 
 export const TEST_USERS = [
-    { username: "demo_team1", password: "delta123", role: "programme_chair", name: "Dr. Alex Rivera", id: "u1", email: "alex.rivera@uni.ac.uk" },
-    { username: "demo_team2", password: "delta123", role: "module_lead", name: "Prof. Sarah Chen", id: "u2", email: "sarah.chen@uni.ac.uk" },
-    { username: "demo_empty", password: "delta123", role: "programme_chair", name: "Dr. Empty User", id: "u4", email: "empty.user@uni.ac.uk" },
+    { username: "demo_team1", password: "delta123", role: "programme_chair", name: "Dr. Alex Rivera", id: "u1", email: "alex.rivera@uni.ac.uk", isActive: true },
+    { username: "demo_team2", password: "delta123", role: "module_lead", name: "Prof. Sarah Chen", id: "u2", email: "sarah.chen@uni.ac.uk", isActive: true },
+    { username: "demo_empty", password: "delta123", role: "programme_chair", name: "Dr. Empty User", id: "u4", email: "empty.user@uni.ac.uk", isActive: true },
+    { username: "admin", password: "admin123", role: "admin", name: "System Administrator", id: "u_admin", email: "admin@uni.ac.uk", isActive: true },
 ];
 
 const MOCK_USER: User = {
   id: 'u1',
   name: 'Dr. Alex Rivera',
   email: 'alex.rivera@uni.ac.uk',
-  role: 'programme_chair'
+  role: 'programme_chair',
+  isActive: true
 };
 
 const MOCK_PROGRAMMES: Programme[] = [
@@ -477,11 +481,13 @@ const PROGRAMME_PRIORITIES_KEY = 'delta_programme_priorities_v2';
 const PROGRAMME_THEMES_KEY = 'delta_programme_themes_v2';
 const PROGRAMME_GOALS_KEY = 'delta_programme_goals_v2';
 const SESSION_KEY = 'delta_session_v2';
+const USERS_KEY = 'delta_users_v1';
 
 const StoreContext = createContext<any>(null);
 
 export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [users, setUsers] = useState<User[]>(TEST_USERS.map(u => ({ ...u, isActive: true }))); // Initialize with test users
   const [evaluations, setEvaluations] = useState<ModuleEvaluation[]>([]);
   const [history, setHistory] = useState<ModuleEvaluationHistory[]>([]);
   
@@ -554,6 +560,11 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         }
     }
 
+    const storedUsers = localStorage.getItem(USERS_KEY);
+    if (storedUsers) {
+        setUsers(JSON.parse(storedUsers));
+    }
+
   }, []);
 
 
@@ -577,10 +588,73 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       persist(PROGRAMME_GOALS_KEY, goals);
   };
 
+  // --- User Management Actions ---
+
+  const addUser = (userData: Partial<User> & { password?: string }) => {
+      const newUser: User = {
+          id: crypto.randomUUID(),
+          name: userData.name || 'New User',
+          email: userData.email || '',
+          role: userData.role || 'viewer',
+          isActive: userData.isActive !== undefined ? userData.isActive : true,
+          password: userData.password // In real app this would be hashed
+      };
+      
+      const updatedUsers = [...users, newUser];
+      setUsers(updatedUsers);
+      persist(USERS_KEY, updatedUsers);
+      return newUser;
+  };
+
+  const updateUser = (id: string, updates: Partial<User>) => {
+      const updatedUsers = users.map(u => 
+          u.id === id ? { ...u, ...updates } : u
+      );
+      setUsers(updatedUsers);
+      persist(USERS_KEY, updatedUsers);
+  };
+
+  const toggleUserActive = (id: string) => {
+      const updatedUsers = users.map(u => 
+          u.id === id ? { ...u, isActive: !u.isActive } : u
+      );
+      setUsers(updatedUsers);
+      persist(USERS_KEY, updatedUsers);
+  };
+
+  const resetUserPassword = (id: string) => {
+      const newPassword = Math.random().toString(36).slice(-10) + "1A!"; // Mock secure password
+      const updatedUsers = users.map(u => 
+          u.id === id ? { ...u, password: newPassword } : u
+      );
+      setUsers(updatedUsers);
+      persist(USERS_KEY, updatedUsers);
+      return newPassword;
+  };
+
   const login = (username: string, password: string): boolean => {
-      const found = TEST_USERS.find(u => u.username === username && u.password === password);
+      // Check against mutable users list first (for new admins/users)
+      // Then fall back to TEST_USERS static list if needed (though users state should cover it)
+      
+      // In this mock, 'username' input is often used for the username field in TEST_USERS
+      // But newly created users might only have email. 
+      // Let's check email OR username match against our 'users' state.
+      
+      const found = users.find(u => 
+          ((u as any).username === username || u.email === username) && 
+          ((u as any).password === password || u.password === password)
+      );
+
       if (found) {
-          const userData: User = { id: found.id, name: found.name, email: found.email, role: found.role };
+          if (found.isActive === false) return false; // Block inactive users
+
+          const userData: User = { 
+              id: found.id, 
+              name: found.name, 
+              email: found.email, 
+              role: found.role,
+              isActive: found.isActive 
+          };
           setUser(userData);
           persist(SESSION_KEY, userData);
           return true;
@@ -1229,7 +1303,14 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     programmeThemes,
     saveProgrammeThemes,
     programmeGoals: smartGoals, // Expose as programmeGoals to match component expectation
-    saveSmartGoals
+    saveSmartGoals,
+
+    // Admin Exports
+    users,
+    addUser,
+    updateUser,
+    toggleUserActive,
+    resetUserPassword
   };
 
   return (
