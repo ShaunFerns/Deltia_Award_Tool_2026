@@ -156,7 +156,7 @@ export default function LoginPage() {
                       <div className="w-full space-y-3">
                           <h4 className="text-sm font-semibold text-slate-900">Demo Accounts</h4>
                           <div className="grid gap-2">
-                              {TEST_USERS.map((u, idx) => (
+                              {TEST_USERS.filter(u => u.role !== 'admin').map((u, idx) => (
                                   <div 
                                     key={idx} 
                                     className="text-xs p-3 rounded border bg-white hover:border-[#78BE20] hover:shadow-sm cursor-pointer transition-all group"
@@ -170,6 +170,17 @@ export default function LoginPage() {
                                       <div className="text-slate-500 font-mono">Pass: {u.password}</div>
                                   </div>
                               ))}
+                          </div>
+                          
+                          {/* Admin Login Helper */}
+                          <div className="pt-2 border-t w-full">
+                             <div 
+                                className="text-xs text-slate-400 hover:text-slate-700 cursor-pointer flex justify-between items-center"
+                                onClick={() => fillDemo("admin", "admin")}
+                             >
+                                <span>Admin Access</span>
+                                <span className="font-mono opacity-50">admin / admin</span>
+                             </div>
                           </div>
                       </div>
                   </CardFooter>

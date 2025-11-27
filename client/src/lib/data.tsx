@@ -292,7 +292,7 @@ export const TEST_USERS = [
     { username: "demo_team1", password: "delta123", role: "programme_chair", name: "Dr. Alex Rivera", id: "u1", email: "alex.rivera@uni.ac.uk", isActive: true },
     { username: "demo_team2", password: "delta123", role: "module_lead", name: "Prof. Sarah Chen", id: "u2", email: "sarah.chen@uni.ac.uk", isActive: true },
     { username: "demo_empty", password: "delta123", role: "programme_chair", name: "Dr. Empty User", id: "u4", email: "empty.user@uni.ac.uk", isActive: true },
-    { username: "admin", password: "admin123", role: "admin", name: "System Administrator", id: "u_admin", email: "admin@uni.ac.uk", isActive: true },
+    { username: "admin", password: "admin", role: "admin", name: "System Administrator", id: "u_admin", email: "admin@uni.ac.uk", isActive: true },
 ];
 
 const MOCK_USER: User = {

@@ -78,12 +78,18 @@ export default function AdminUserFormPage() {
           toast({ title: "User Created", description: `${formData.name} has been added.` });
       } else {
           // Edit Mode
+          if (formData.password && formData.password !== formData.confirmPassword) {
+              toast({ title: "Validation Error", description: "Passwords do not match.", variant: "destructive" });
+              return;
+          }
+
           if (userId) {
               updateUser(userId, {
                   name: formData.name,
                   email: formData.email,
                   role: formData.role,
-                  isActive: formData.isActive
+                  isActive: formData.isActive,
+                  ...(formData.password ? { password: formData.password } : {}) // Only update password if provided
               });
               toast({ title: "User Updated", description: "User details saved successfully." });
           }
@@ -165,28 +171,28 @@ export default function AdminUserFormPage() {
                         />
                    </div>
 
-                   {!isEditMode && (
-                       <div className="grid gap-4 pt-4 border-t">
-                           <div className="space-y-2">
-                               <Label htmlFor="password">Password</Label>
-                               <Input 
-                                  id="password" 
-                                  type="password"
-                                  value={formData.password}
-                                  onChange={(e) => setFormData({...formData, password: e.target.value})}
-                               />
-                           </div>
-                           <div className="space-y-2">
-                               <Label htmlFor="confirmPassword">Confirm Password</Label>
-                               <Input 
-                                  id="confirmPassword" 
-                                  type="password"
-                                  value={formData.confirmPassword}
-                                  onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
-                               />
-                           </div>
+                   <div className="grid gap-4 pt-4 border-t">
+                       <div className="space-y-2">
+                           <Label htmlFor="password">{isEditMode ? "New Password (Optional)" : "Password"}</Label>
+                           <Input 
+                              id="password" 
+                              type="password"
+                              value={formData.password}
+                              onChange={(e) => setFormData({...formData, password: e.target.value})}
+                              placeholder={isEditMode ? "Leave blank to keep current password" : ""}
+                           />
                        </div>
-                   )}
+                       <div className="space-y-2">
+                           <Label htmlFor="confirmPassword">Confirm Password</Label>
+                           <Input 
+                              id="confirmPassword" 
+                              type="password"
+                              value={formData.confirmPassword}
+                              onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+                              placeholder={isEditMode ? "Leave blank to keep current password" : ""}
+                           />
+                       </div>
+                   </div>
 
                </CardContent>
                <CardFooter className="flex justify-between bg-slate-50 p-6">
